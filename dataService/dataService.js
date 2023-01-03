@@ -1,5 +1,5 @@
-const mongo = require('./mongo.js');
-const postgresService = require('./postgresService');
+const mongo = require("./mongo.js");
+const postgresService = require("./postgresService");
 
 // eslint-disable-next-line max-lines-per-function
 async function insert(request) {
@@ -45,36 +45,42 @@ async function binExists(publicId) {
 
 //returns an array of public bin IDs given an IP address
 async function getBinsFromIp(ip) {
-  let result
+  let result;
   try {
-    result = await postgresService.getBinArrayFromIp(ip)
+    result = await postgresService.getBinArrayFromIp(ip);
   } catch (err) {
-    console.log("get bins from IP failed\n", err)
+    console.log("get bins from IP failed\n", err);
   }
 
-  return result
+  return result;
 }
 
 //returns an array of requests given a bin ID
 async function getRequestsFromBin(publicBinId) {
   //get an array of document IDs from postgres
 
-  const mongoIdArr = await postgresService.getRequestIdsFromBin(publicBinId)
+  const mongoIdArr = await postgresService.getRequestIdsFromBin(publicBinId);
   if (mongoIdArr.length === 0) {
-    return []
+    return [];
   }
 
   //use the array of document IDs to pull requests from mongo
-  const requestArr = await mongo.readMany(mongoIdArr)
-  return requestArr
+  const requestArr = await mongo.readMany(mongoIdArr);
+  return requestArr;
 }
 
 //returns the sitched together object {bin: info, request: [requests]}
 async function getBinInfoAndRequests(binID) {
   const requests = await getRequestsFromBin(binID);
   const binInfo = await postgresService.getBinInfo(binID);
-  return { binInfo, requests }
+  return { binInfo, requests };
 }
 
-
-module.exports = { insert, createBin, binExists, getBinsFromIp, getRequestsFromBin, getBinInfoAndRequests };
+module.exports = {
+  insert,
+  createBin,
+  binExists,
+  getBinsFromIp,
+  getRequestsFromBin,
+  getBinInfoAndRequests,
+};
