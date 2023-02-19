@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
 
-const reqSchema = new mongoose.Schema({
+const reqSchema = new Schema({
   ip: { type: String, required: true },
   path: { type: String, required: true },
   method: { type: String, required: true },
@@ -8,6 +8,6 @@ const reqSchema = new mongoose.Schema({
   body: { type: String, required: true },
 });
 
-const reqModel = mongoose.model("reqModel", reqSchema);
+const reqModel = model("reqModel", reqSchema);
 
-module.exports = reqModel;
+export default reqModel;

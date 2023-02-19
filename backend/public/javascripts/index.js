@@ -1,9 +1,9 @@
 class Model {
   constructor() {
-    // this.url = 'http://localhost:3000/bins';
-    // this.endpoint = 'http://localhost:3000/req';
-    this.url = 'https://app.marcinkostecki.info/bins';
-    this.endpoint = 'https://app.marcinkostecki.info/req';
+    this.url = "http://localhost:3000/bins";
+    this.endpoint = "http://localhost:3000/req";
+    // this.url = 'https://app.marcinkostecki.info/bins';
+    // this.endpoint = 'https://app.marcinkostecki.info/req';
   }
 
   // eslint-disable-next-line consistent-return
@@ -19,10 +19,10 @@ class Model {
   }
 
   responseData(response) {
-    let contentType = response.headers.get('Content-Type');
+    let contentType = response.headers.get("Content-Type");
     if (!contentType) {
       return null;
-    } else if (contentType.includes('json')) {
+    } else if (contentType.includes("json")) {
       return response.json();
     } else {
       return response.text();
@@ -31,18 +31,18 @@ class Model {
 
   async getBins(ip) {
     this.bins = await this.request(this.url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        Accept: 'application/json',
+        Accept: "application/json",
       },
     });
   }
 
   async getReqs(binId) {
-     const response = await this.request(`${this.url}/${binId}`, {
-      method: 'GET',
+    const response = await this.request(`${this.url}/${binId}`, {
+      method: "GET",
       headers: {
-        Accept: 'application/json',
+        Accept: "application/json",
       },
     });
     this.binInfo = response.binInfo;
@@ -52,13 +52,13 @@ class Model {
   }
 
   async postBin() {
-    this.currentBin = await this.request(this.url, { method: 'POST' });
+    this.currentBin = await this.request(this.url, { method: "POST" });
   }
 
   formatBinInfo() {
     this.binInfo.binUrl = `${this.endpoint}/${this.binInfo.binId}`;
     this.binInfo.count = this.currentRequests.length;
-    this.binInfo.status = this.binInfo.active ? 'Active' : 'Inactive';
+    this.binInfo.status = this.binInfo.active ? "Active" : "Inactive";
   }
 
   formatRequests() {
@@ -67,16 +67,16 @@ class Model {
   }
 
   formatheaders() {
-    this.currentRequests.forEach(req => {
+    this.currentRequests.forEach((req) => {
       const keys = Object.keys(req.headers);
-      req.headers = keys.map(key => {
+      req.headers = keys.map((key) => {
         return { name: key, value: req.headers[key] };
       });
     });
   }
 
   formatBody() {
-    this.currentRequests.forEach(req => {
+    this.currentRequests.forEach((req) => {
       req.body = JSON.stringify(JSON.parse(req.body), null, 2);
     });
   }
@@ -98,79 +98,79 @@ class View {
   compileTemplates() {
     this.templates = {};
     let templates = this.getAllElements('[type="text/x-handlebars"]');
-    templates.forEach(template => {
+    templates.forEach((template) => {
       this.templates[template.id] = Handlebars.compile(template.innerHTML);
     });
   }
 
   insertBins(bins) {
     this.removeBinList();
-    const binList = this.templates['binListTemplate'](bins);
-    this.getElement('main').insertAdjacentHTML('afterbegin', binList);
-    this.binList = this.getElement('#binList');
+    const binList = this.templates["binListTemplate"](bins);
+    this.getElement("main").insertAdjacentHTML("afterbegin", binList);
+    this.binList = this.getElement("#binList");
     this.newBinButton = this.getElement("#newBinBttn");
   }
 
   removeBinList() {
-    let list = this.getElement('#binList');
+    let list = this.getElement("#binList");
     if (list) list.remove();
   }
 
   bindSelectBin(handler) {
-    this.binList.onclick = event => {
+    this.binList.onclick = (event) => {
       event.preventDefault();
       let target = event.target;
-      if (target.classList.contains('binLink')) handler(target);
+      if (target.classList.contains("binLink")) handler(target);
     };
   }
 
   bindNewBinButton(handler) {
-    this.newBinButton.onclick = event => {
+    this.newBinButton.onclick = (event) => {
       event.preventDefault();
       let target = event.target;
       handler(target);
-    }
+    };
   }
 
   bindBinsButton(handler) {
-    this.getElement('header a').onclick = event => {
+    this.getElement("header a").onclick = (event) => {
       event.preventDefault();
       handler();
-    }
+    };
   }
 
   bindCopy(handler) {
-    this.getElement('.copy').onclick = event => {
+    this.getElement(".copy").onclick = (event) => {
       event.preventDefault();
       handler(this.getUrl(event.target));
-    }
+    };
   }
 
   bindRefresh(handler) {
-    this.getElement('.refresh').onclick = event => {
+    this.getElement(".refresh").onclick = (event) => {
       event.preventDefault();
       handler();
-    }
+    };
   }
 
   insertRequests(binInfo, reqs) {
     this.removeBinList();
     this.insertBinInfo(binInfo);
-    const reqsHtml = this.templates['reqListTemplate'](reqs);
-    this.getElement('main').insertAdjacentHTML('beforeend', reqsHtml);
+    const reqsHtml = this.templates["reqListTemplate"](reqs);
+    this.getElement("main").insertAdjacentHTML("beforeend", reqsHtml);
   }
-  
+
   insertBinInfo(binInfo) {
-    const binInfoHtml = this.templates['binInfoTemplate'](binInfo);
-    this.getElement('main').insertAdjacentHTML('afterbegin', binInfoHtml);
+    const binInfoHtml = this.templates["binInfoTemplate"](binInfo);
+    this.getElement("main").insertAdjacentHTML("afterbegin", binInfoHtml);
   }
 
   wipeClean() {
-    this.getElement('main').innerHTML = "";
+    this.getElement("main").innerHTML = "";
   }
 
   getUrl(target) {
-    return target.closest('#endpoint').querySelector('span').textContent;
+    return target.closest("#endpoint").querySelector("span").textContent;
   }
 }
 
@@ -189,37 +189,37 @@ class Controller {
     this.view.bindBinsButton(this.handleBinsButton);
   }
 
-  handleSelectBin = async target => {
-    const binId = target.getAttribute('data-id');
+  handleSelectBin = async (target) => {
+    const binId = target.getAttribute("data-id");
     this.model.currentBin = { binId: binId };
     await this.model.getReqs(binId);
     this.buildBin();
-  }
+  };
 
-  handleNewBin = async target => {
+  handleNewBin = async (target) => {
     await this.model.postBin();
     await this.model.getReqs(this.model.currentBin.binId);
     this.buildBin();
-  }
+  };
 
-  handleBinsButton = async => {
+  handleBinsButton = (async) => {
     this.view.wipeClean();
     this.firstRender();
-  }
+  };
 
-  handleCopy = async url => {
+  handleCopy = async (url) => {
     try {
       await navigator.clipboard.writeText(url);
     } catch {
-      console.log('copy failed');
+      console.log("copy failed");
     }
-  }
+  };
 
   handleRefresh = async () => {
     await this.model.getReqs(this.model.currentBin.binId);
     this.view.wipeClean();
     this.buildBin();
-  }
+  };
 
   buildBinList() {
     this.view.insertBins(this.model.bins);
@@ -233,6 +233,6 @@ class Controller {
 }
 
 let app;
-addEventListener('DOMContentLoaded', () => {
+addEventListener("DOMContentLoaded", () => {
   app = new Controller(new Model(), new View());
 });

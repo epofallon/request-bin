@@ -1,13 +1,13 @@
-const mongoose = require('mongoose');
-const reqModel = require('./models');
+import { connect } from "mongoose";
+import reqModel from "./models.js";
 
-main().catch(err => console.log(err));
+main().catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/requestBin');
+  await connect("mongodb://localhost:27017/requestBin");
 }
 
-async function insertOne(req) {
+export async function insertOne(req) {
   const reqDoc = new reqModel(req);
   const { _id: id } = await reqDoc.save();
   // const stringId = id.toString();
@@ -16,7 +16,7 @@ async function insertOne(req) {
   return id.toString();
 }
 
-function deleteOne(id) {
+export function deleteOne(id) {
   return reqModel.findByIdAndDelete(id);
 }
 
@@ -26,15 +26,14 @@ function readOne(id) {
 
 //todo: is there a better way to do this? Couldn't find an easy mongoose function
 //for querying multiple documents by ID
-async function readMany(idArr) {
-  var requestArr = []
+export async function readMany(idArr) {
+  var requestArr = [];
   for (var i = 0; i < idArr.length; i++) {
     const id = idArr[i];
-    var request = await readOne(id)
-    requestArr.push(request)
+    var request = await readOne(id);
+    requestArr.push(request);
   }
-  return requestArr
+  return requestArr;
 }
 
-
-module.exports = { insertOne, readOne, deleteOne, readMany };
+export default { insertOne, readOne, deleteOne, readMany };
